@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Giro da Psicaótica — Montador para Substack (v12)</title>
+<style>
+:root{color-scheme:light;--bg:#f7f5f0;--surface:#fffefb;--ink:#282230;--muted:#645d69;--line:#ddd7dc;--purple:#5a386f;--lav:#f0e9f5;--green:#26654d;--shadow:0 12px 38px rgba(38,22,47,.06)}
+*{box-sizing:border-box}html{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{background:var(--bg);color:var(--ink);margin:0;line-height:1.52}
+main{max-width:1080px;padding:32px 20px 64px;margin:0 auto}h1,h2,h3,p{margin-top:0}h1{font-family:Georgia,serif;font-size:clamp(2.1rem,4vw,3.2rem);margin-bottom:8px;letter-spacing:-.035em}h2{font-size:1.16rem;margin-bottom:16px}h3{font-size:1rem;margin-bottom:8px}.eyebrow{font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--purple);font-weight:750}.subtitle{max-width:720px;color:var(--muted);margin-bottom:24px}
+.panel,.author-card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}.panel{margin:20px 0}.import{border:2px dashed #bba7c5;border-radius:14px;padding:20px;background:#fdfbfe}.import:focus-within{border-color:var(--purple)}.small{font-size:.82rem;color:var(--muted)}.inline{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.actions{display:flex;gap:10px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:670px){.grid{grid-template-columns:1fr}main{padding:22px 12px 44px}.panel,.author-card{padding:16px}}
+label{font-size:.88rem;font-weight:700;display:block;margin-bottom:6px}input[type="text"],input[type="date"],textarea,input[type="file"]{font:inherit;color:var(--ink);width:100%}input[type="text"],input[type="date"],textarea{padding:10px 12px;border:1px solid #bcb4bf;border-radius:9px;background:white}textarea{resize:vertical;min-height:110px}input[type="file"]{font-size:.9rem}button{border:0;border-radius:9px;background:var(--purple);color:white;padding:10px 16px;font:inherit;font-weight:690;cursor:pointer}button:hover{filter:brightness(.93)}button:focus-visible{outline:3px solid #9c6caf;outline-offset:2px}button.secondary{background:#ede7f0;color:#442956}button.tertiary{background:transparent;color:var(--purple);border:1px solid #bdadc6;padding:7px 11px;font-size:.84rem}button:disabled{opacity:.43;cursor:not-allowed} .status{border-radius:9px;padding:10px 12px;background:#edf6ef;border:1px solid #c3dccb;color:var(--green);margin-top:10px;display:none}.status.error{background:#fff0ef;border-color:#e3c5c3;color:#972e34}.status.visible{display:block}.stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}.pill{background:var(--lav);color:#50345f;font-size:.79rem;border-radius:99px;padding:5px 10px;font-weight:660}.hidden{display:none!important}.author-card{margin:12px 0}.author-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.author-title{display:flex;align-items:center;gap:10px}.author-name{font-weight:750;font-size:1.06rem}.author-card .small{margin:6px 0 12px}.author-card textarea{min-height:150px}.author-name-edit{max-width:330px}.right{margin-left:auto}.preview{max-width:780px;margin:0 auto;font-family:Georgia,"Times New Roman",serif;padding:20px 10px}.preview h2{font-size:2rem;margin-bottom:8px;color:#3b284b}.preview h3{font-size:1.28rem;margin-bottom:10px;border-top:1px solid #e7e0e9;padding-top:24px;color:#4c315b}.preview p{white-space:pre-wrap;overflow-wrap:anywhere}.preview a{color:#684280}.preview .edition{font-family:system-ui,sans-serif;color:#69616a;font-size:.83rem}.preview .intro{font-size:1.03rem}.preview .end{margin-top:28px;padding-top:20px;border-top:1px solid #e7e0e9}.empty{text-align:center;color:var(--muted);padding:24px 5px}.footnote{font-size:.79rem;color:var(--muted);margin-top:20px}.check{display:flex;align-items:center;gap:8px;margin:0;font-size:.84rem;cursor:pointer}.check input{accent-color:var(--purple)}.scrolltop{margin-top:12px}.substack-tip{border-left:4px solid var(--purple);background:#f6f0f8;padding:12px 14px;margin-top:14px;border-radius:6px}.preview .piece{margin:25px 0}.preview .piece h2{font-size:1.9rem;color:#252025;border:0;padding:0;margin-bottom:3px}.preview .piece h4{font-family:Georgia,serif;font-size:1rem;color:#3d3540;margin:21px 0 8px;font-weight:700}.preview .piece h3{font-family:Georgia,serif;font-size:1.28rem;color:#2c2630;margin:25px 0 10px;border:0;padding:0}.preview .piece .kicker{font-size:.9rem;margin:0 0 18px;color:#504954}.preview .body-paragraph{white-space:normal;line-height:1.7;margin:10px 0;overflow-wrap:anywhere}.preview .head-title{font-size:2rem;line-height:1.15;margin:0 0 10px;color:#282230}.preview .head-subtitle{font-family:system-ui,sans-serif;font-size:.95rem;color:#5b5362;margin:0 0 18px}.preview .rule{border:0;border-top:1px solid #dcd6df;margin:20px 0}.preview .submeta{font-family:system-ui,sans-serif;font-size:.77rem;letter-spacing:.06em;color:#776f79;text-transform:uppercase}.warning{font-size:.81rem;color:#794422;background:#fff7e9;border:1px solid #eddec0;padding:10px;border-radius:10px}.help-link{color:var(--purple);font-weight:700}.credit-fields{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:7px}.credit-fields input{max-width:none}@media(max-width:670px){.credit-fields{grid-template-columns:1fr}}.instagram-hint{font-size:.79rem;color:var(--muted);margin:6px 0 0}.preview .member-credit{font-family:Georgia,serif;font-weight:bold}.preview .member-credit a{font-weight:700}.note-accent{padding:11px 13px;background:#f2ebf7;border-left:3px solid var(--purple);border-radius:7px;font-size:.83rem;margin-bottom:13px}
+
+.amazon-card{background:#fcfaf7;border:1px solid #e8dfd5;border-radius:10px;padding:12px;margin:10px 0}
+.amazon-card input{margin-top:6px}.amazon-original{font-size:.82rem;color:#655d63;word-break:break-all}
+.amazon-original a{color:var(--purple)}.amazon-flag{font-size:.75rem;display:inline-block;margin-left:8px;padding:2px 7px;background:#fff0d9;color:#6e491e;border-radius:99px}
+.preview .affiliate-label{font-family:system-ui,sans-serif;font-size:.74em;color:#655664}.amazon-help{background:#fff7e7;border:1px solid #ead5ad;border-radius:10px;padding:12px 13px;font-size:.86rem}
+
+.book-cover{display:block;max-width:150px;max-height:220px;width:auto;height:auto;object-fit:contain;border-radius:5px;box-shadow:0 4px 18px #25202522}
+.book-search{margin-top:13px;border-top:1px solid #e6dfe6;padding-top:13px}
+.book-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin:10px 0}
+.book-result{padding:10px;background:white;border:1px solid #e7dfe8;border-radius:10px;min-width:0;overflow-wrap:anywhere}
+.book-result img{width:85px;height:120px;object-fit:contain;display:block;margin:0 0 7px}
+.book-result strong{display:block;font-size:.86rem;line-height:1.3}
+.book-result .small{margin:5px 0}.book-result button{font-size:.8rem;padding:8px 9px}
+.book-selected{display:flex;align-items:flex-start;gap:15px;flex-wrap:wrap;margin:12px 0;background:#f5f1f7;padding:12px;border-radius:9px}
+.book-selected .details{min-width:180px;max-width:450px;flex:1}
+.book-selected .details strong{display:block;margin-bottom:5px}
+.book-search-status{margin-top:8px}.book-buttons{margin-top:8px}.book-image-input{margin-top:8px}
+.preview figure.book-figure{margin:16px auto 22px;text-align:center;max-width:450px}
+.preview figure.book-figure img{max-width:190px;max-height:270px;height:auto;width:auto;display:block;margin:0 auto;border-radius:3px}
+.preview figure.book-figure figcaption{font:normal .82rem/1.4 system-ui,sans-serif;color:#645d69;margin-top:8px}
+@media(max-width:670px){.book-results{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.directory-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 14px;margin-top:12px}.directory-person{background:#f8f3fa;border:1px solid #e5deeb;border-radius:8px;padding:7px 10px;font-size:.87rem}.directory-person a{color:#5a386f;overflow-wrap:anywhere}.directory-person strong{font-weight:740}@media(max-width:670px){.directory-grid{grid-template-columns:1fr}}
+
+/* v12: visualização automática da capa de afiliados na edição com apenas um livro */
+.auto-affiliate-note{background:#e8f5ed;border-left:4px solid #2a8656;padding:11px 13px;font:600 .83rem/1.45 system-ui,sans-serif;color:#22583c;border-radius:5px}
+/* v11: vinculação explícita de afiliados e capa */
+.affiliate-association{margin:13px 0;padding:15px;background:#f1f7f3;border:1px solid #b7d1be;border-radius:10px}
+.affiliate-association strong{display:block;margin-bottom:5px;color:#26523c}
+.affiliate-association select{font:inherit;width:100%;padding:9px;background:#fff;border:1px solid #b7c8bb;border-radius:8px;max-width:100%;margin-bottom:8px}
+.affiliate-candidate-preview{display:flex;align-items:flex-start;gap:12px;margin:8px 0 11px;padding:10px;background:white;border-radius:8px;font-size:.8rem;color:#48444b}
+.affiliate-candidate-preview img{width:65px;max-height:96px;object-fit:contain}
+.affiliate-candidate-preview p{margin:0}
+.association-success{margin:9px 0 0;font-size:.82rem;color:#26654d;font-weight:650}
+.affiliate-association .tertiary{margin-left:6px}
+/* v9: seleção e prévia visíveis também sem carregar a foto externa */
+.book-quick-preview{margin:13px 0 0;padding:15px;border:2px solid #c5b0cf;background:#f6f1fa;border-radius:12px}
+.book-quick-preview h4{margin:0 0 10px;font-family:system-ui,sans-serif;font-size:1rem}
+.book-quick-preview .book-preview-content{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.book-quick-preview .book-preview-content>div:last-child{flex:1;min-width:175px}
+.book-quick-preview img{max-width:150px;max-height:220px;min-width:75px;object-fit:contain;display:block;background:white}
+.book-photo-fallback{display:none;min-height:105px;max-width:160px;background:#ebe7ed;border-radius:8px;border:1px dashed #ad9eb4;padding:12px;font-size:.79rem;color:#493d51;align-items:center}
+.book-photo-fallback.visible{display:flex}
+.book-preview-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.book-error{color:#8a3434;font-size:.8rem;margin:8px 0 0}
+.book-result img.book-broken{display:none}
+.book-result .book-image-warning{display:none;font-size:.77rem;color:#8a3434;margin:4px 0}
+.book-result .book-image-warning.visible{display:block}
+.preview .book-cover-error{padding:10px;color:#8a3434;font:normal .8rem system-ui,sans-serif}
+
+.preview figure.book-figure{border:1px solid #e8ddec;background:#fbf9fd;border-radius:10px;padding:14px}
+.preview .book-cover-error{background:#fff7ed;border-radius:8px;border:1px solid #e8d8bc;margin:8px 0;padding:14px;min-height:80px}
+.book-quick-preview{scroll-margin-top:20px}
+.book-quick-preview h4{color:#4b3060}
+</style>
+</head>
+<body>
+<main>
+  <div class="eyebrow">Ferramenta editorial · Coletivo Psicaótica</div>
+  <h1>Montador do Giro <span style="font:600 .37em system-ui,sans-serif;letter-spacing:0;color:#745686;white-space:nowrap">v12 · Capas automáticas para afiliados</span></h1>
+  <p class="subtitle">Transforme a conversa exportada do grupo de WhatsApp em um rascunho no formato da newsletter da Psicaótica no Substack. Funciona no próprio navegador: <strong>as mensagens não são enviadas a nenhum servidor</strong> (a busca de livros consulta serviços externos somente ao clicar em Buscar capa).</p>
+  <section class="panel">
+    <h2>1. Importe a conversa do grupo</h2>
+    <div class="import">
+      <label for="file">Arquivo exportado pelo WhatsApp (.txt ou .zip)</label>
+      <input type="file" id="file" accept=".txt,.zip,text/plain,application/zip" />
+      <p class="small" style="margin:9px 0 0">No WhatsApp: abra o grupo → nome do grupo → <strong>Exportar conversa</strong> → <strong>Sem mídia</strong>. Envie o ZIP ou o TXT aqui. Se aparecer erro, abra "Verificar por que a importação falhou" logo abaixo.</p>
+    </div>
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+    <details id="diagnostics" class="hidden" style="margin-top:12px; background:#fffaf2; padding:12px; border-radius:10px; border:1px solid #e4d5bc">
+      <summary style="cursor:pointer;font-weight:650">Verificar por que a importação falhou</summary>
+      <p class="small" style="margin-top:10px">O arquivo abriu, mas o padrão das datas ou dos nomes pode ser diferente. Abaixo estão as primeiras linhas do texto (podem conter nomes; tudo permanece no seu navegador). Se precisar me enviar uma amostra, oculte os dados pessoais.</p>
+      <pre id="diagnostic-lines" style="white-space:pre-wrap;overflow-wrap:anywhere;font-size:.8rem;max-height:170px;overflow:auto"></pre>
+    </details>
+    <details style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:650;color:var(--purple)">Não funcionou? Colar o conteúdo do arquivo .txt</summary>
+      <p class="small" style="margin-top:9px">Descompacte o ZIP e abra o arquivo da conversa (geralmente _chat.txt). Você pode selecioná-lo acima ou copiar seu conteúdo e colar abaixo.</p>
+      <textarea id="paste-chat" rows="5" placeholder="[31/10/2026, 14:30:00] Participante: texto da postagem" aria-label="Conteúdo exportado da conversa"></textarea>
+      <button id="parse-paste" class="secondary" type="button" style="margin-top:8px">Ler texto colado</button>
+    </details>
+    <div id="stats" class="stats hidden"></div>
+  </section>
+  <section id="editor" class="hidden">
+    <section class="panel">
+      <h2>2. Escolha a edição</h2>
+      <div class="grid">
+        <div><label for="start">De</label><input type="date" id="start" /></div>
+        <div><label for="end">Até (inclusive)</label><input type="date" id="end" /></div>
+        <div><label for="title">Título da edição</label><input type="text" id="title" value="Newsletter Psicaótica" placeholder="Newsletter Psicaótica #12 — Tema da semana" /></div>
+        <div><label for="subtitle">Subtítulo da edição</label><input type="text" id="subtitle" placeholder="Diálogos sobre ..., Giro Psicaótica e atividades do coletivo" /></div>
+        <div style="grid-column:1/-1"><label for="intro">Abertura opcional</label><textarea id="intro" rows="2" placeholder="Saudação ou introdução da edição."></textarea></div>
+        <div style="grid-column:1/-1"><label for="psicaecos">Coluna Psicaecos (opcional)</label><textarea id="psicaecos" rows="5" placeholder="Cole aqui o texto da coluna principal. Ela aparecerá antes do Giro da Semana."></textarea></div>
+        <div><label for="activities">Atividades do coletivo (opcional)</label><textarea id="activities" rows="3" placeholder="Eventos, cursos e atividades com seus links."></textarea></div>
+        <div><label for="closing">Encerramento opcional</label><textarea id="closing" rows="3" placeholder="Mensagem final, assinatura etc."></textarea></div>
+      </div>
+      <div class="actions scrolltop"><button id="filter">Organizar contribuições</button><button class="secondary" id="week">Usar semana da última postagem</button></div>
+      <p class="small" style="margin-top:10px;margin-bottom:0">As contribuições são agrupadas por autor. Você pode editar o nome e o @Instagram separadamente, mudar a ordem e desmarcar o que não entrar na edição. Os perfis alterados ficam salvos apenas neste navegador, quando permitido. Clicar em “Organizar contribuições” novamente refaz a lista e descarta essas edições.</p>
+    </section>
+    <section class="panel" id="contrib-panel">
+      <h2>3. Revise os giros recebidos</h2>
+      <p class="note-accent">Os @ do Instagram entram <strong>automaticamente nos créditos</strong>, com link clicável e <strong>nome + @ em H4 negrito</strong>, conforme o modelo da newsletter da Psicaótica. Os 9 perfis identificados nas edições #1–#14 (até 31/10/2026) estão pré-cadastrados. Confira os dados antes de publicar; se alguém mudar de @, edite o campo correspondente.</p>
+      <details class="member-directory" style="margin:12px 0 18px">
+        <summary style="cursor:pointer;font-weight:700;color:var(--purple)">Ver os 9 perfis do Instagram já cadastrados</summary>
+        <div id="directory" class="directory-grid"></div>
+        <p class="small" style="margin-top:9px">Perfis extraídos dos créditos públicos do Substack da Psicaótica, edições #1 a #14. São dados pré-carregados, não uma sincronização em tempo real com o Instagram. Se o nome do contato no WhatsApp for diferente, edite o cadastro na contribuição.</p>
+      </details>
+      <div id="contributors"></div>
+    </section>
+    <section id="amazon-panel" class="panel hidden">
+      <h2>4. Links da Amazon</h2>
+      <p class="small">Reconhecemos links da Amazon e preservamos os endereços, incluindo códigos de afiliado. Agora o sistema <strong>mostra uma sugestão de capa assim que a busca termina</strong>. Para A Máquina do Caos, já incluí uma capa de referência. Confira a edição antes de publicar. Links curtos como <strong>link.amazon</strong> não informam o título do livro por si só.</p>
+      <p class="amazon-help"><strong>Privacidade:</strong> a conversa do WhatsApp não sai do seu navegador. A busca de capas consulta serviços públicos <em>apenas quando você clica em Buscar capa</em>, enviando somente o título digitado. Confira se a capa pertence à edição indicada. <strong>No Substack, pode ser necessário inserir a imagem manualmente</strong> pelo editor.</p>
+      <div id="amazon-links"></div>
+      <p class="amazon-help"><strong>Atenção aos links de afiliados:</strong> se forem usados em newsletter enviada por e-mail, as regras atuais da Amazon exigem comunicações solicitadas e identificação clara do caráter publicitário. Confira quem é o titular do link e a declaração de associado exigida pela Amazon. O montador não verifica se um link realmente tem afiliado ou se aponta para o produto desejado. <a href="https://associados.amazon.com.br/help/operating/policies" target="_blank" rel="noopener noreferrer">Consultar as regras da Amazon</a>.</p>
+    </section>
+    <section class="panel" id="preview-panel">
+      <h2>5. Prévia no padrão da newsletter</h2>
+      <p class="small">A capa selecionada aparece automaticamente ao lado da recomendação. Se uma fonte de imagem falhar, o sistema tenta os endereços alternativos e informa se não conseguir carregar.</p>
+      <div class="actions">
+        <button id="copy-giro">Copiar somente o Giro para Substack</button>
+        <button id="copy-rich" class="secondary">Copiar corpo da newsletter</button>
+        <button id="copy-title" class="tertiary">Copiar título</button>
+        <button id="copy-subtitle" class="tertiary">Copiar subtítulo</button>
+      </div>
+      <p class="small">O editor do Substack tem campos próprios para título e subtítulo. Copie cada um no campo correspondente; copie o Giro ou o corpo inteiro para a área de texto. As imagens e embeds precisam ser revisados/adicionados no Substack.</p>
+      <div id="preview" class="preview"></div>
+      <div id="copy-status" class="status" role="status" aria-live="polite"></div>
+      <div class="substack-tip">Depois de copiar, <a class="help-link" href="https://psicaotica.substack.com/" target="_blank" rel="noopener noreferrer">abra o Substack da Psicaótica</a>, acesse o editor, crie uma postagem e cole. Revise tudo antes de publicar. <strong>Esta ferramenta não publica nem envia e-mails automaticamente.</strong></div>
+      <div class="actions scrolltop"><button id="copy" class="secondary">Copiar texto simples</button><button id="md" class="secondary">Baixar Markdown</button><button id="html" class="secondary">Baixar HTML</button></div>
+    </section>
+  </section>
+  <p class="footnote">Privacidade: processamento local. Esta ferramenta não acessa seu WhatsApp, não armazena histórico em servidor e não envia mensagens. Revise as contribuições, especialmente nomes, links e dados pessoais, antes de publicar. Para evitar perda de alterações, baixe a versão editada antes de fechar a página.</p>
+</main>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+let messages=[],allCount=0,authors=[];
+// Substituições de URLs da Amazon feitas pelo editor nesta sessão; nenhuma URL é reescrita silenciosamente.
+let amazonEdits={};
+// Um link curto não informa o livro; uma associação sempre precisa ser confirmada pelo editor.
+let linkedAffiliateSources={};
+const affiliateIgnored=new Set();
+const hiddenStandaloneAffiliateLinks=new Set();
+// Capas selecionadas por URL da Amazon. Imagens remotas podem ser lembradas entre edições.
+const COVERS_KEY='psicaotica-giro-capas-v1';
+let bookCovers={},bookQueries={};
+// Referência da capa em português de A Máquina do Caos, de Max Fisher.
+// São links de imagem de terceiros; se não abrirem, mostramos aviso e opção de envio manual.
+const REFERENCIA_CAOS={
+ title:'A Máquina do Caos',author:'Max Fisher',source:'Capa de referência · edição brasileira',
+ image:'https://livrariascuritiba.vteximg.com.br/arquivos/ids/2110740-1000-1000/LV499969.jpg',
+ fallbacks:['https://covers.openlibrary.org/b/isbn/9786556924007-M.jpg?default=false']
+};
+function textKey(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()}
+function eligibleKnownCover(url,body){
+  // Nunca supõe que um link curto de afiliado seja o mesmo livro do link original.
+  try{
+   const u=new URL(url);if(['link.amazon','amzn.to','amzlinks.in'].includes(u.hostname.toLowerCase()))return null;
+   const bookMention=textKey(body).includes('a maquina do caos');
+   const bookSlug=textKey(decodeURIComponent(u.pathname.replace(/[\/-]+/g,' '))).includes('maquina caos');
+   return (bookMention&&bookSlug)?{...REFERENCIA_CAOS}:null;
+  }catch{return null}
+}
+function coverCandidates(cover){
+ return [...new Set([cover&&cover.image,...((cover&&cover.fallbacks)||[])].map(safeCoverSrc).filter(Boolean))];
+}
+function wireCoverImage(img,missing){
+ const coverKey=img.dataset.bookUrl||'';
+ const cover=bookCovers[coverKey];
+ const sources=coverCandidates(cover);
+ let n=Math.max(0,sources.indexOf(img.src))+1;
+ const onMissing=()=>{
+   if(n<sources.length){img.src=sources[n++];return}
+   img.style.display='none';if(missing)missing.style.display='flex';
+ };
+ img.addEventListener('error',onMissing);
+ if(img.complete&&img.naturalWidth===0)onMissing();
+}
+
+try{bookCovers=JSON.parse(localStorage.getItem(COVERS_KEY)||'{}')||{}}catch{bookCovers={}}
+function storeCovers(){
+  try{localStorage.setItem(COVERS_KEY,JSON.stringify(Object.fromEntries(Object.entries(bookCovers).filter(([,v])=>v&&/^https:\/\//i.test(v.image))))) }catch{}
+}
+
+// Os perfis abaixo foram conferidos nos créditos publicados das edições #1 a #14
+// do Substack da Psicaótica (arquivo consultado em 31/10/2026).
+// Só associamos aliases de nomes explicitamente documentados; nunca deduzimos
+// arrobas a partir do nome ou do número de telefone.
+const KNOWN_PEOPLE=[
+  {name:'Fred',instagram:'@pscfredteixeira',aliases:['Você','Voce','Fred','Frederico','Frederico Teixeira','Fred Teixeira','pscfredteixeira']},
+  {name:'Lora',instagram:'@lora.psicaotica',aliases:['Lora','Loraine','Loraine Gaino','Lora Gaino','lora.psicaotica']},
+  {name:'Dalila',instagram:'@dalila.vfreitas',aliases:['Dalila','Dalila Freitas','dalila.vfreitas']},
+  {name:'Yago',instagram:'@yago.psicanalista',aliases:['Yago','Yago Morais','yago.psicanalista']},
+  {name:'Flora',instagram:'@atelie_de_escuta',aliases:['Flora','Flora Nakazone','atelie_de_escuta']},
+  {name:'Naomi Lustosa',instagram:'@naomi.lustosa',aliases:['Naomi','Naomi Lustosa','naomi.lustosa']},
+  {name:'Simonete',instagram:'@simonetesp',aliases:['Simonete','simonetesp']},
+  {name:'Maju',instagram:'@escrituraclinica',aliases:['Maju','Maria Giulia Chiozzini','Maria Giulia','Giulia Chiozzini','Maju Chiozzini','escrituraclinica']},
+  {name:'Léo',instagram:'@psicaleo',aliases:['Léo','Leo','psicaleo']}
+];
+const MEMBERS_KEY='psicaotica-giro-integrantes-v2';
+const OLD_MEMBERS_KEY='psicaotica-giro-integrantes-v1';
+function nameKey(s){return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s+/g,' ').trim().replace(/^@/,'')}
+const DEFAULT_MEMBERS={};
+for(const person of KNOWN_PEOPLE)for(const alias of person.aliases)DEFAULT_MEMBERS[nameKey(alias)]={name:person.name,instagram:person.instagram};
+function storedProfiles(){
+  try{
+    const current=JSON.parse(localStorage.getItem(MEMBERS_KEY)||'{}')||{};
+    const old=JSON.parse(localStorage.getItem(OLD_MEMBERS_KEY)||'{}')||{};
+    // Migra customizações feitas na versão anterior. Corrige o arroba incorreto
+    // de Maju que constava como valor padrão na v5.
+    for(const [alias,entry] of Object.entries(old)){
+      if(Object.hasOwn(current,alias)||!entry||typeof entry!=='object')continue;
+      const copy={...entry};
+      if(copy.instagram?.toLowerCase()==='@chiozzinimaju' &&
+         ['maju','maria giulia chiozzini','giulia chiozzini'].includes(nameKey(alias)))
+        copy.instagram='@escrituraclinica';
+      current[alias]=copy;
+    }
+    return current;
+  }catch{return {}}
+}
+let savedMembers=storedProfiles();
+function memberFor(author){const key=nameKey(author),d=savedMembers[key]||DEFAULT_MEMBERS[key]||{};return {source:author,name:d.name||author,instagram:d.instagram||''}}
+function saveMember(a){try{savedMembers[nameKey(a.source)]={name:a.name,instagram:a.instagram};localStorage.setItem(MEMBERS_KEY,JSON.stringify(savedMembers))}catch{/* Navegadores podem restringir localStorage para file:// */}}
+function renderDirectory(){
+  const box=$('directory');
+  for(const p of KNOWN_PEOPLE){
+    const item=document.createElement('div');item.className='directory-person';
+    const strong=document.createElement('strong');strong.textContent=p.name+' — ';
+    const link=document.createElement('a');link.href='https://www.instagram.com/'+p.instagram.slice(1)+'/';
+    link.target='_blank';link.rel='noopener noreferrer';link.textContent=p.instagram;
+    item.append(strong,link);box.appendChild(item);
+  }
+}
+renderDirectory();
+function instagramHandle(raw){
+ const value=String(raw||'').trim().replace(/^https?:\/\/(?:www\.)?instagram\.com\//i,'').replace(/\/.*$/,'').replace(/^@/,'');
+ return /^[a-zA-Z0-9._]{1,30}$/.test(value)?value:'';
+}
+function memberCreditHTML(a){
+ const name=esc(a.name||a.source||'Integrante'),handle=instagramHandle(a.instagram);
+ return `<strong class="member-credit">${name}${handle?` (<a href="https://www.instagram.com/${encodeURIComponent(handle)}/" target="_blank" rel="noopener noreferrer"><strong>@${esc(handle)}</strong></a>)`:''}</strong>`;
+}
+function memberCreditMarkdown(a){
+ const handle=instagramHandle(a.instagram);
+ return `${a.name||a.source||'Integrante'}${handle?` ([@${handle}](https://www.instagram.com/${encodeURIComponent(handle)}/))`:''}`;
+}
+function memberCreditPlain(a){const h=instagramHandle(a.instagram);return `${a.name||a.source||'Integrante'}${h?' (@'+h+')':''}`}
+
+const cleanHeader=s=>String(s).replace(/[\u200b-\u200f\u202a-\u202e\u2060\u2066-\u2069\uFEFF]/g,'').replace(/[\u00a0\u202f]/g,' ');
+function parseDateParts(raw,rawTime,ampm,usDate=false){
+  const pieces=raw.split(/[\/.-]/).map(Number);
+  let d,mo,y;
+  if(pieces[0]>999){[y,mo,d]=pieces}
+  else if(usDate){[mo,d,y]=pieces}
+  else {[d,mo,y]=pieces}
+  if(y<100)y+=(y<70?2000:1900);
+  let [h,mi]=rawTime.split(':').map(Number);
+  if(ampm){if(h===12)h=0;if(/^p/i.test(ampm))h+=12}
+  const dt=new Date(y,mo-1,d,h,mi);
+  if(dt.getFullYear()!==y||dt.getMonth()!==mo-1||dt.getDate()!==d||dt.getHours()!==h||dt.getMinutes()!==mi)return null;
+  return dt;
+}
+function extractMessages(text){
+  const lines=String(text).replace(/^\uFEFF/,'').replace(/\r\n?/g,'\n').replace(/[\u2028\u2029]/g,'\n').split('\n');
+  const result=[];let current=null;let dateHeaders=0;
+  // Variações iPhone e Android: [31/10/26, 14:30:02] Nome: ..., 31/10/2026 14:30 - Nome: ..., 2026-10-31 14:30 - Nome: ...
+  const hdr=/^\s*\[?\s*(\d{1,4}[\/.-]\d{1,2}[\/.-]\d{2,4})\s*(?:,|às?|at)?\s*(\d{1,2}:\d{2}(?::\d{2})?)\s*(AM|PM|a\.m\.|p\.m\.)?\s*\]?\s*(?:[-–—]\s*)?(.+)$/i;
+  const headers=lines.map(line=>cleanHeader(line).match(hdr)).filter(Boolean);
+  // Detecta exportação americana mm/dd/aa quando não há dúvida.
+  let usDate=false,usEvidence=0,brEvidence=0;
+  for(const h of headers.slice(0,100)){
+    const d=h[1].split(/[\/.-]/).map(Number);
+    if(d[0]>999)continue;
+    if(d[0]>12)brEvidence++;
+    else if(d[1]>12)usEvidence++;
+  }
+  if(usEvidence>brEvidence)usDate=true;
+  for(const original of lines){
+    const line=cleanHeader(original).trimStart();
+    const match=line.match(hdr);
+    if(match){
+      dateHeaders++;
+      const dt=parseDateParts(match[1],match[2],match[3],usDate);
+      const speaker=(match[4]||'').match(/^([^:\n]{1,180}):\s*(.*)$/s);
+      if(dt&&speaker&&speaker[1].trim()){
+        current={date:dt,author:speaker[1].trim(),body:speaker[2]||''};result.push(current);
+      }else current=null; // Notificações do sistema não são contribuições.
+    }else if(current){current.body+='\n'+original}
+  }
+  return {result,dateHeaders,lines,usDate};
+}
+function isMediaPlaceholder(s){
+  const t=s.trim();
+  return /^(?:<)?(?:imagem|vídeo|video|áudio|audio|figurinhas?|sticker|gif|documento|arquivo|image|video|audio|media|file)(?:\s+|\s*:\s*)(?:omitid[ao]s?|ocult[ao]s?|anexad[ao]s?|omitted|attached)(?:>)?$/i.test(t)||/^<attached:[^>]+>$/i.test(t);
+}
+function localISO(dt){return [dt.getFullYear(),String(dt.getMonth()+1).padStart(2,'0'),String(dt.getDate()).padStart(2,'0')].join('-')}
+function fmt(d){return new Intl.DateTimeFormat('pt-BR',{day:'2-digit',month:'long',year:'numeric'}).format(d)}
+function showStatus(msg,error=false,target='status'){const el=$(target);el.textContent=msg;el.classList.add('visible');el.classList.toggle('error',error)}
+function setWeek(){const d=new Date(messages[messages.length-1].date);const mon=(d.getDay()+6)%7;const start=new Date(d.getFullYear(),d.getMonth(),d.getDate()-mon);const end=new Date(start.getFullYear(),start.getMonth(),start.getDate()+6);$('start').value=localISO(start);$('end').value=localISO(end)}
+function filterMessages(){
+  if(!$('start').value||!$('end').value)return;
+  if($('start').value>$('end').value){showStatus('A data inicial precisa ser anterior à data final.',true);return}
+  const filtered=messages.filter(m=>{let d=localISO(m.date);return d>=$('start').value&&d<=$('end').value});
+  const map=new Map();
+  filtered.forEach(m=>{if(!map.has(m.author))map.set(m.author,[]);map.get(m.author).push(m)});
+  authors=Array.from(map,([author,posts])=>({...memberFor(author),posts:posts.length,text:posts.map(p=>p.body.trim()).filter(Boolean).join('\n\n'),include:true}));
+  renderAuthors();renderAmazonLinks();renderPreview();
+}
+function renderAuthors(){
+  const wrap=$('contributors');wrap.replaceChildren();
+  if(!authors.length){const e=document.createElement('p');e.className='empty';e.textContent='Nenhuma contribuição encontrada nesse período. Altere as datas e tente novamente.';wrap.appendChild(e);return}
+  authors.forEach((a,i)=>{
+    const card=document.createElement('article');card.className='author-card';
+    const top=document.createElement('div');top.className='author-top';
+    const hdr=document.createElement('div');hdr.className='author-title';
+    const check=document.createElement('input');check.type='checkbox';check.checked=a.include;check.id='inc-'+i;check.addEventListener('change',()=>{a.include=check.checked;renderAmazonLinks();renderPreview()});
+    const lbl=document.createElement('label');lbl.className='check';lbl.htmlFor=check.id;lbl.appendChild(check);const span=document.createElement('span');span.textContent='Incluir';lbl.appendChild(span);
+    hdr.appendChild(lbl);
+    const move=document.createElement('div');move.className='actions';
+    const up=document.createElement('button');up.className='tertiary';up.textContent='↑ Subir';up.disabled=i===0;up.addEventListener('click',()=>swap(i,i-1));
+    const down=document.createElement('button');down.className='tertiary';down.textContent='↓ Descer';down.disabled=i===authors.length-1;down.addEventListener('click',()=>swap(i,i+1));
+    move.append(up,down);top.append(hdr,move);
+    const meta=document.createElement('p');meta.className='small';meta.textContent=`${a.posts} postagem(ns) identificada(s)`;
+    const fields=document.createElement('div');fields.className='credit-fields';
+    const nameField=document.createElement('div');
+    const nameLabel=document.createElement('label');nameLabel.textContent='Nome para publicação';nameLabel.htmlFor='name-'+i;
+    const name=document.createElement('input');name.type='text';name.className='author-name-edit';name.id='name-'+i;name.value=a.name;name.addEventListener('input',()=>{a.name=name.value;saveMember(a);renderPreview()});
+    nameField.append(nameLabel,name);
+    const instaField=document.createElement('div');
+    const instaLabel=document.createElement('label');instaLabel.textContent='Instagram do integrante';instaLabel.htmlFor='instagram-'+i;
+    const insta=document.createElement('input');insta.type='text';insta.id='instagram-'+i;insta.autocomplete='off';insta.placeholder='@usuario';insta.value=a.instagram||'';
+    insta.addEventListener('input',()=>{a.instagram=insta.value;saveMember(a);renderPreview()});
+    const hint=document.createElement('p');hint.className='instagram-hint';hint.textContent=`Nome no WhatsApp: ${a.source}. O @ será um link no Substack.${nameKey(a.source)==="voce"?" Atenção: ‘Você’ só é Fred se Fred exportou a conversa.":""}`;
+    instaField.append(instaLabel,insta,hint);fields.append(nameField,instaField);
+    const textLabel=document.createElement('label');textLabel.textContent='Texto (editável)';textLabel.htmlFor='body-'+i;textLabel.style.marginTop='12px';
+    const ta=document.createElement('textarea');ta.id='body-'+i;ta.value=a.text;ta.addEventListener('input',()=>{a.text=ta.value;renderAmazonLinks();renderPreview()});
+    card.append(top,meta,fields,textLabel,ta);wrap.appendChild(card);
+  });
+}
+function swap(i,j){[authors[i],authors[j]]=[authors[j],authors[i]];renderAuthors();renderPreview()}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function safeHref(url){try{const u=new URL(url);return /^https?:$/.test(u.protocol)?u.href:null}catch{return null}}
+function isAmazonURL(raw){
+  try{
+    const host=new URL(raw).hostname.toLowerCase();
+    return host==='link.amazon'||host==='amzn.to'||host==='amzlinks.in'||host==='amazon.com.br'||host.endsWith('.amazon.com.br')||host==='amazon.com'||host.endsWith('.amazon.com')||host==='amazon.co.uk'||host.endsWith('.amazon.co.uk');
+  }catch{return false}
+}
+function isPossibleAffiliate(raw){
+  try{const u=new URL(raw),h=u.hostname.toLowerCase();return ['link.amazon','amzn.to','amzlinks.in'].includes(h)||u.searchParams.has('tag')}
+  catch{return false}
+}
+function amazonUrlsFrom(s){
+  // Extrai endereços de URLs normais e da sintaxe Markdown [texto](URL).
+  const urls=[];const re=/https?:\/\/[^\s<>\])]+/g;
+  for(const m of String(s||'').matchAll(re)){
+    let url=m[0].replace(/[.,!?;:]+$/,'');
+    if(isAmazonURL(url)&&!urls.includes(url))urls.push(url);
+  }
+  return urls;
+}
+function isShortAmazonLink(raw){
+ try{return ['link.amazon','amzn.to','amzlinks.in'].includes(new URL(raw).hostname.toLowerCase())}
+ catch{return false}
+}
+// O link avulso da Lora, quando vinculado ao livro, não deve virar uma segunda indicação.
+// Alteramos somente o rascunho exibido/exportado, nunca o texto original editável.
+function editorialBody(source){
+ return String(source||'').split(/\n\s*\n/).filter(p=>{
+   const val=p.trim();
+   return !hiddenStandaloneAffiliateLinks.has(val);
+ }).join('\n\n');
+}
+function editedAmazonURL(original){
+  const candidate=amazonEdits[original];
+  return candidate&&isAmazonURL(candidate)&&safeHref(candidate)?candidate:original;
+}
+function safeCoverSrc(raw){
+  const value=String(raw||'').trim();
+  if(/^data:image\/(png|jpeg|webp);base64,[a-z0-9+/=]+$/i.test(value))return value;
+  try{const u=new URL(value);return u.protocol==='https:'?u.href:null}catch{return null}
+}
+function guessBookTitle(url,entries){
+  try{
+    const u=new URL(url);
+    if(['link.amazon','amzn.to','amzlinks.in'].includes(u.hostname.toLowerCase()))return '';
+    const slug=decodeURIComponent(u.pathname.split('/').filter(Boolean)[0]||'');
+    if(slug&&slug!=='dp'&&slug!=='gp'&&slug.length>4){
+      const words=slug.replace(/[-_]+/g,' ').split(/\s+/).filter(Boolean).slice(0,6);
+      if(words.length)return words.join(' ');
+    }
+  }catch{}
+  return '';
+}
+async function searchBookCovers(terms){
+  const candidates=[];const seen=new Set();const reasons=[];
+  const add=(c)=>{
+    const url=safeCoverSrc(c.image);if(!url)return;
+    const key=String(c.title||'').toLowerCase()+'|'+String(c.author||'').toLowerCase();
+    if(seen.has(key))return;seen.add(key);candidates.push({...c,image:url});
+  };
+  // Duas fontes independentes. Se uma falhar, a outra ainda pode encontrar capas.
+  // Buscamos no máximo 6 resultados por fonte para não sobrecarregar os serviços.
+  try{
+    const api='https://openlibrary.org/search.json?title='+encodeURIComponent(terms)+'&limit=6&fields=key,title,author_name,first_publish_year,cover_i';
+    const response=await fetch(api,{mode:'cors',cache:'default'});if(!response.ok)throw Error('HTTP '+response.status);
+    const results=await response.json();
+    for(const item of results.docs||[]){
+      if(!item.cover_i)continue;
+      add({image:'https://covers.openlibrary.org/b/id/'+item.cover_i+'-L.jpg',title:item.title||'Sem título',author:(item.author_name||[]).slice(0,2).join(', '),year:item.first_publish_year||'',source:'Open Library'});
+    }
+  }catch(e){reasons.push('Open Library: '+(e.message||'sem conexão'));}
+  try{
+    const api='https://www.googleapis.com/books/v1/volumes?q='+encodeURIComponent(terms)+'&maxResults=6&printType=books';
+    const response=await fetch(api,{mode:'cors'});if(!response.ok)throw Error('HTTP '+response.status);
+    const results=await response.json();
+    for(const item of results.items||[]){
+      const v=item.volumeInfo||{},im=v.imageLinks||{};
+      const url=im.extraLarge||im.large||im.medium||im.small||im.thumbnail||im.smallThumbnail;
+      if(!url)continue;
+      add({image:url.replace(/^http:\/\//i,'https://'),title:v.title||'Sem título',author:(v.authors||[]).join(', '),year:(v.publishedDate||'').slice(0,4),source:'Google Livros'});
+    }
+  }catch(e){reasons.push('Google Livros: '+(e.message||'sem conexão'));}
+  return {covers:candidates.slice(0,12),reasons};
+}
+function coverFigure(url){
+  const cover=bookCovers[url];if(!cover)return '';
+  const image=safeCoverSrc(cover.image),link=safeHref(editedAmazonURL(url));if(!image||!link)return '';
+  return `<figure class="book-figure"><a href="${esc(link)}" target="_blank" rel="noopener noreferrer"><img data-book-url="${esc(url)}" src="${esc(image)}" alt="Capa do livro ${esc(cover.title||'')}" style="max-width:190px;max-height:270px;width:auto;height:auto"></a><span class="book-cover-error" style="display:none;justify-content:center">Não foi possível carregar a capa das fontes consultadas. Na seção 4, selecione outra ou envie uma imagem do computador.</span><figcaption>${esc(cover.title||'Livro')} · <a href="${esc(link)}" target="_blank" rel="noopener noreferrer">Ver na Amazon</a></figcaption></figure>`;
+}
+function paragraphsWithCovers(s){
+  const already=new Set();
+  return String(s||'').trim().split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).map(p=>{
+    let out=`<p class="body-paragraph">${linkify(p).replace(/\n/g,'<br>')}</p>`;
+    for(const url of amazonUrlsFrom(p))if(bookCovers[url]&&!already.has(url)){
+      out+=coverFigure(url);already.add(url);
+    }
+    return out;
+  }).join('')
+}
+function markdownWithCovers(s){
+  const seen=new Set();
+  return String(s||'').trim().split(/\n\s*\n/).map(p=>{
+    let out=amazonMarkdownBody(p);
+    for(const url of amazonUrlsFrom(p)){
+      const cover=bookCovers[url],image=cover&&safeCoverSrc(cover.image);
+      if(image&&!seen.has(url)){
+        out+='\n\n[!['+(cover.title||'Capa do livro').replace(/[\[\]]/g,'')+']('+image+')]('+editedAmazonURL(url)+')';seen.add(url);
+      }
+    }
+    return out;
+  }).join('\n\n');
+}
+function renderAmazonLinks(){
+  const panel=$('amazon-panel'),wrap=$('amazon-links'),found=new Map();
+  for(const a of authors.filter(a=>a.include&&a.text.trim())){
+    for(const url of amazonUrlsFrom(a.text)){
+      if(!found.has(url))found.set(url,new Set());
+      found.get(url).add(a.name||a.source);
+    }
+  }
+  // Primeiro cadastramos capas disponíveis para os links completos.
+  // Isso é necessário antes de processar o cartão do link curto.
+  for(const url of found.keys()){
+    if(isShortAmazonLink(url)||bookCovers[url])continue;
+    const match=authors.find(a=>a.include && amazonUrlsFrom(a.text).includes(url));
+    const suggestion=match&&eligibleKnownCover(url,match.text);
+    if(suggestion){bookCovers[url]=suggestion;storeCovers()}
+  }
+  const completeLinks=[...found.keys()].filter(url=>!isShortAmazonLink(url));
+  const shortLinks=[...found.keys()].filter(isShortAmazonLink);
+  // Quando a conversa diz explicitamente que o segundo URL é um link de afiliado,
+  // e há um único livro e um único link curto, podemos sugerir automaticamente a capa.
+  // Não usamos essa heurística para edições com vários livros, nem sem confirmação textual.
+  const affiliateMention=authors.some(a=>a.include&&/links?\s+(?:d[eoas]?\s+)?afiliad[oa]s?/i.test(a.text));
+  if(completeLinks.length===1&&shortLinks.length===1&&affiliateMention){
+    const original=completeLinks[0],affiliate=shortLinks[0],cover=bookCovers[original];
+    if(cover && !linkedAffiliateSources[affiliate] && !affiliateIgnored.has(affiliate) && !Object.keys(linkedAffiliateSources).length){
+      const prev=amazonEdits[original]&&amazonEdits[original]!==affiliate?amazonEdits[original]:null;
+      linkedAffiliateSources[affiliate]={source:original,priorEdit:prev,priorCover:bookCovers[affiliate]||null,automatic:true};
+      // Usamos a MESMA capa; links curtos não revelam nome/ISBN nem a imagem.
+      bookCovers[affiliate]={...cover};
+      amazonEdits[original]=affiliate;
+      hiddenStandaloneAffiliateLinks.add(affiliate);
+      storeCovers();
+    }
+  }
+  // Uma alteração da capa do livro original deve atualizar também o cartão do afiliado.
+  for(const [affiliate,association] of Object.entries(linkedAffiliateSources)){
+    if(found.has(affiliate) && found.has(association.source) && bookCovers[association.source]){
+      bookCovers[affiliate]={...bookCovers[association.source]};
+    }
+  }
+  panel.classList.toggle('hidden',found.size===0);
+  wrap.replaceChildren();
+  let n=0;
+  for(const [url,names] of found){
+    if(!bookCovers[url]){
+      const match=authors.find(a=>a.include && amazonUrlsFrom(a.text).includes(url));
+      const suggestion=match&&eligibleKnownCover(url,match.text);
+      if(suggestion){bookCovers[url]=suggestion;storeCovers();}
+    }
+    const card=document.createElement('div');card.className='amazon-card';
+    const lead=document.createElement('div');lead.className='small';lead.innerHTML=`<strong>${esc([...names].join(', '))}</strong>${isPossibleAffiliate(url)?'<span class="amazon-flag">Possível link de afiliado</span>':''}`;
+    if(linkedAffiliateSources[url]?.automatic){const note=document.createElement('p');note.className='auto-affiliate-note';note.textContent='✓ Capa adicionada automaticamente a este link curto. Na prévia do Giro, a recomendação do livro usa o link de afiliado. Verifique se o link abre o mesmo livro antes de publicar.';card.append(note)}
+    const raw=document.createElement('div');raw.className='amazon-original';
+    const link=document.createElement('a');link.href=url;link.textContent=url;link.target='_blank';link.rel='noopener noreferrer';raw.append('Original: ',link);
+    const label=document.createElement('label');label.htmlFor='amazon-'+n;label.textContent='Link a utilizar na newsletter (edite se desejar substituí-lo)';
+    const input=document.createElement('input');input.type='text';input.id='amazon-'+n;input.value=amazonEdits[url]||url;input.autocomplete='off';
+    const hint=document.createElement('div');hint.className='small';hint.textContent='Se outro integrante enviou um link de afiliado para esse mesmo livro, cole-o aqui. Confira antes se os dois levam ao mesmo produto.';
+    input.addEventListener('input',()=>{
+      const replacement=input.value.trim();
+      if(replacement&&safeHref(replacement)&&isAmazonURL(replacement)){
+        amazonEdits[url]=replacement;input.setCustomValidity('');
+      }else if(replacement===url||!replacement){delete amazonEdits[url];input.setCustomValidity('')}
+      else{input.setCustomValidity('Informe um link válido da Amazon.');delete amazonEdits[url]}
+      renderPreview();
+    });
+    // O link curto da Amazon não oferece título/ISBN no próprio endereço.
+    // Permite herdar a capa do link completo somente após confirmação editorial.
+    if(isShortAmazonLink(url)){
+      const candidates=[...found.keys()].filter(other=>other!==url&&!isShortAmazonLink(other));
+      if(candidates.length){
+        const associate=document.createElement('div');associate.className='affiliate-association';
+        const heading=document.createElement('strong');heading.textContent='Associar capa e link de afiliado';
+        const description=document.createElement('p');description.className='small';
+        description.textContent='O link curto não informa qual livro é. Se ele corresponde a um link completo desta edição, confirme a associação abaixo. A capa será reutilizada e a indicação passará a apontar para o link de afiliado.';
+        const selLabel=document.createElement('label');selLabel.textContent='Qual recomendação corresponde a este link?';selLabel.htmlFor='pair-'+n;
+        const select=document.createElement('select');select.id='pair-'+n;
+        for(const candidate of candidates){
+          const option=document.createElement('option');option.value=candidate;
+          const match=bookCovers[candidate];
+          option.textContent=(match?.title||guessBookTitle(candidate)||'Link completo da Amazon')+' — '+candidate.slice(0,84)+(candidate.length>84?'…':'');
+          select.append(option);
+        }
+        const selectedCandidate=candidates.find(other=>linkedAffiliateSources[url]?.source===other);
+        if(selectedCandidate)select.value=selectedCandidate;
+        const candidatePreview=document.createElement('div');candidatePreview.className='affiliate-candidate-preview';
+        const paintCandidate=()=>{
+          candidatePreview.replaceChildren();
+          const cover=bookCovers[select.value];
+          if(!cover){candidatePreview.textContent='Esta recomendação ainda não possui capa. Busque a capa no cartão do link completo antes de associar.';return}
+          const pic=document.createElement('img');pic.src=cover.image;pic.alt='Capa sugerida: '+(cover.title||'Livro');pic.referrerPolicy='no-referrer';
+          const txt=document.createElement('p');txt.textContent=(cover.title||'Livro')+' — capa sugerida. Confirme se os dois endereços são do mesmo produto.';
+          candidatePreview.append(pic,txt);
+        };
+        select.addEventListener('change',paintCandidate);paintCandidate();
+        const linkButton=document.createElement('button');linkButton.className='secondary';linkButton.type='button';linkButton.textContent='Confirmar: usar capa e link de afiliado';
+        const associationStatus=document.createElement('p');associationStatus.className='small';
+        if(linkedAffiliateSources[url]){
+          associationStatus.className='association-success';
+          associationStatus.textContent=linkedAffiliateSources[url].automatic?'✓ Capa aplicada AUTOMATICAMENTE ao link de afiliado. O texto foi vinculado ao link curto. Confirme que ele realmente abre o mesmo livro antes de publicar.':'✓ Capa associada: a recomendação usa o link de afiliado. Confira o destino antes de publicar.';
+        }
+        linkButton.addEventListener('click',()=>{
+          const source=select.value;
+          if(!bookCovers[source]){associationStatus.textContent='Primeiro selecione uma capa para o link completo.';return}
+          // Evita vincular silenciosamente um código a um livro diferente.
+          if(linkedAffiliateSources[url] && linkedAffiliateSources[url].source!==source){
+            const previous=linkedAffiliateSources[url];
+            if(amazonEdits[previous.source]===url){
+              if(previous.priorEdit)amazonEdits[previous.source]=previous.priorEdit;
+              else delete amazonEdits[previous.source];
+            }
+          }
+          const priorEdit=amazonEdits[source]&&amazonEdits[source]!==url?amazonEdits[source]:null;
+          const priorCover=bookCovers[url]||null;
+          linkedAffiliateSources[url]={source,priorEdit,priorCover,automatic:false};
+          bookCovers[url]={...bookCovers[source]};
+          amazonEdits[source]=url;
+          hiddenStandaloneAffiliateLinks.add(url);
+          storeCovers();renderAmazonLinks();renderPreview();
+          showStatus('Capa e link de afiliado associados. Confira a seção 5: o livro agora aponta para '+url+'.',false,'copy-status');
+        });
+        associate.append(heading,description,selLabel,select,candidatePreview,linkButton,associationStatus);
+        if(linkedAffiliateSources[url]){
+          const undo=document.createElement('button');undo.type='button';undo.className='tertiary';undo.textContent='Desfazer associação';
+          undo.addEventListener('click',()=>{
+            const link=linkedAffiliateSources[url];
+            if(link && amazonEdits[link.source]===url){
+              if(link.priorEdit)amazonEdits[link.source]=link.priorEdit;
+              else delete amazonEdits[link.source];
+            }
+            if(link?.priorCover)bookCovers[url]=link.priorCover;
+            else delete bookCovers[url];
+            delete linkedAffiliateSources[url];affiliateIgnored.add(url);hiddenStandaloneAffiliateLinks.delete(url);
+            storeCovers();renderAmazonLinks();renderPreview();
+          });
+          associate.append(undo);
+        }
+        card.append(associate);
+      }
+    }
+    const search=document.createElement('div');search.className='book-search';
+    const help=document.createElement('p');help.className='small';help.textContent='Ao clicar em Buscar capa, o montador já seleciona uma sugestão e mostra a imagem aqui e na seção 5. Se a imagem não carregar, tente outra capa ou envie um arquivo JPG/PNG/WebP.';search.append(help);
+    const coverLabel=document.createElement('label');coverLabel.htmlFor='book-query-'+n;coverLabel.textContent='Título do livro para encontrar a capa';
+    const query=document.createElement('input');query.type='text';query.id='book-query-'+n;query.placeholder='Ex.: A Máquina do Caos, Max Fisher';
+    query.value=bookQueries[url]!==undefined?bookQueries[url]:(bookCovers[url]?.title||guessBookTitle(url,authors));
+    query.addEventListener('input',()=>{bookQueries[url]=query.value});
+    const searchButton=document.createElement('button');searchButton.className='secondary';searchButton.textContent='Buscar capa';searchButton.type='button';
+    const searchStatus=document.createElement('p');searchStatus.className='small book-search-status';searchStatus.setAttribute('role','status');
+    const results=document.createElement('div');results.className='book-results';
+    const selected=document.createElement('div');
+    const imageField=document.createElement('details');imageField.className='small book-image-input';
+    const detailsSummary=document.createElement('summary');detailsSummary.textContent='Já tenho a capa: usar URL ou arquivo de imagem';
+    const imageUrlLabel=document.createElement('label');imageUrlLabel.textContent='Endereço HTTPS da imagem (JPG, PNG ou WebP)';
+    const imageUrlInput=document.createElement('input');imageUrlInput.type='text';imageUrlInput.placeholder='https://.../capa.jpg';
+    const imageUrlButton=document.createElement('button');imageUrlButton.className='tertiary';imageUrlButton.type='button';imageUrlButton.textContent='Usar endereço da capa';
+    const imageUpload=document.createElement('input');imageUpload.type='file';imageUpload.accept='image/jpeg,image/png,image/webp';imageUpload.style.marginTop='9px';
+    const useCover=(cover)=>{
+      bookCovers[url]=cover;
+      for(const [affiliate,match] of Object.entries(linkedAffiliateSources))if(match.source===url)bookCovers[affiliate]={...cover};
+      storeCovers();paintSelected();renderPreview();
+    };
+    const paintSelected=()=>{
+      selected.replaceChildren();const cover=bookCovers[url];if(!cover||!safeCoverSrc(cover.image))return;
+      const box=document.createElement('div');box.className='book-quick-preview';
+      const head=document.createElement('h4');head.textContent='✓ Capa escolhida — prévia imediata';
+      const content=document.createElement('div');content.className='book-preview-content';
+      const picHolder=document.createElement('div');
+      const pic=document.createElement('img');pic.className='book-cover';pic.src=cover.image;pic.alt='Capa: '+(cover.title||'livro');pic.referrerPolicy='no-referrer';pic.dataset.bookUrl=url;
+      const fallback=document.createElement('div');fallback.className='book-photo-fallback';fallback.textContent='A imagem não carregou. Você pode informar outro link ou escolher um arquivo da capa logo abaixo.';
+      wireCoverImage(pic,fallback);
+      picHolder.append(pic,fallback);
+      const info=document.createElement('div');
+      const name=document.createElement('strong');name.textContent=(cover.title||'Livro')+(linkedAffiliateSources[url]?' · LINK DE AFILIADO':'');
+      const source=document.createElement('p');source.className='small';source.textContent=(cover.author||'')+(cover.source?' · Fonte: '+cover.source:'');
+      const instruction=document.createElement('p');instruction.className='small';instruction.textContent='Esta é a capa vinculada à recomendação. Confira se é a edição correta antes de publicar no Substack.';
+      const actions=document.createElement('div');actions.className='book-preview-actions';
+      const jump=document.createElement('button');jump.type='button';jump.textContent='Ver capa no Giro da Semana ↓';
+      jump.addEventListener('click',()=>{
+        renderPreview();
+        const figure=[...$('preview').querySelectorAll('figure.book-figure a')].find(a=>a.href===editedAmazonURL(url));
+        (figure||$('preview-panel')).scrollIntoView({behavior:'smooth',block:'center'});
+      });
+      const open=document.createElement('a');open.href=cover.image;open.target='_blank';open.rel='noopener noreferrer';open.className='help-link';open.textContent='Abrir imagem';
+      const remove=document.createElement('button');remove.className='tertiary';remove.type='button';remove.textContent='Remover capa';
+      remove.addEventListener('click',()=>{delete bookCovers[url];storeCovers();paintSelected();renderPreview()});
+      actions.append(jump,open,remove);info.append(name,source,instruction,actions);
+      content.append(picHolder,info);box.append(head,content);selected.append(box);
+    };
+    searchButton.addEventListener('click',async()=>{
+      const terms=query.value.trim();if(!terms){searchStatus.textContent='Digite o título para pesquisar: um link curto não revela qual livro é.';return}
+      bookQueries[url]=terms;results.replaceChildren();searchStatus.textContent='Buscando em catálogos de livros…';searchButton.disabled=true;
+      try{
+        const lookup=await searchBookCovers(terms),covers=lookup.covers;
+        if(textKey(terms).includes('maquina do caos')){
+          const known={...REFERENCIA_CAOS};
+          const same=covers.some(c=>textKey(c.title).includes('maquina do caos')&&textKey(c.author).includes('fisher'));
+          if(!same)covers.unshift(known);
+          else{const i=covers.findIndex(c=>textKey(c.title).includes('maquina do caos')&&textKey(c.author).includes('fisher'));if(i>0)covers.unshift(...covers.splice(i,1))}
+        }
+        if(!covers.length){searchStatus.textContent='Não consegui mostrar capas para essa pesquisa. '+(lookup.reasons.length?'Falhas de conexão: '+lookup.reasons.join(' / ')+'. ':'')+'Tente apenas o título do livro, ou abra abaixo “Já tenho a capa” e envie a imagem pelo computador.';imageField.open=true;return}
+        // A busca já preenche a capa: não exige um segundo clique para ver a prévia.
+        useCover(covers[0]);
+        searchStatus.textContent=`✓ Prévia automática exibida abaixo e na seção 5 (${covers.length} capa(s) encontrada(s)). Confira a edição; para trocar, use os resultados. ${lookup.reasons.length?'Uma fonte falhou: '+lookup.reasons.join(' / '):''}`;
+        for(const cover of covers){
+          const tile=document.createElement('div');tile.className='book-result';
+          const pic=document.createElement('img');pic.loading='lazy';pic.referrerPolicy='no-referrer';pic.src=cover.image;pic.alt='Capa de '+cover.title;
+          const imgWarning=document.createElement('p');imgWarning.className='book-image-warning';imgWarning.textContent='A miniatura não carregou, mas você pode tentar utilizar esta capa.';
+          pic.addEventListener('error',()=>{pic.classList.add('book-broken');imgWarning.classList.add('visible')});
+          const title=document.createElement('strong');title.textContent=cover.title;
+          const desc=document.createElement('p');desc.className='small';desc.textContent=(cover.author||'')+(cover.year?' · '+cover.year:'')+' · '+cover.source;
+          const choose=document.createElement('button');choose.type='button';choose.className='secondary';choose.textContent='Trocar para esta capa';
+          choose.addEventListener('click',()=>{useCover(cover);searchStatus.textContent='Capa alterada! Veja a imagem abaixo e na seção 5.'});
+          tile.append(pic,imgWarning,title,desc,choose);results.append(tile);
+        }
+      }catch(err){searchStatus.textContent='Busca não disponível neste navegador ou rede. Tente novamente ou carregue a imagem manualmente.'}
+      finally{searchButton.disabled=false}
+    });
+    imageUrlButton.addEventListener('click',()=>{
+      const candidate=safeCoverSrc(imageUrlInput.value.trim());
+      if(!candidate||!candidate.startsWith('https://')){searchStatus.textContent='Digite uma URL HTTPS válida para a imagem.';return}
+      useCover({image:candidate,title:query.value.trim()||'Livro',author:'',source:'URL informada pelo editor'});
+      searchStatus.textContent='Capa adicionada! Veja a prévia neste cartão e na seção 5.';
+    });
+    imageUpload.addEventListener('change',async()=>{
+      const f=imageUpload.files?.[0];if(!f)return;
+      if(!['image/jpeg','image/png','image/webp'].includes(f.type)||f.size>6*1024*1024){searchStatus.textContent='Use JPG, PNG ou WebP com até 6 MB.';return}
+      const fileData=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=reject;reader.readAsDataURL(f)});
+      useCover({image:fileData,title:query.value.trim()||f.name,author:'',source:'Arquivo local (não salvo entre sessões)'});
+      searchStatus.textContent='Capa local adicionada! Veja a prévia neste cartão e na seção 5. Para publicar no Substack, envie também o arquivo da imagem.';
+    });
+    imageField.append(detailsSummary,imageUrlLabel,imageUrlInput,imageUrlButton,imageUpload);
+    search.append(coverLabel,query,searchButton,searchStatus,results,selected,imageField);
+    card.append(lead,raw,label,input,hint,search);wrap.appendChild(card);paintSelected();n++;
+  }
+}
+function amazonMarkdownBody(s){
+  return String(s||'').replace(/https?:\/\/[^\s<>\])]+/g,matched=>{
+    const url=matched.replace(/[.,!?;:]+$/,'');
+    if(!isAmazonURL(url))return matched;
+    return `[Ver na Amazon](${editedAmazonURL(url)})`+matched.slice(url.length);
+  });
+}
+function amazonPlainBody(s){
+  return String(s||'').replace(/https?:\/\/[^\s<>\])]+/g,matched=>{
+    const url=matched.replace(/[.,!?;:]+$/,'');
+    return (isAmazonURL(url)?editedAmazonURL(url):url)+matched.slice(url.length);
+  });
+}
+function linkify(s){
+  const re=/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)|(https?:\/\/[^\s<>]+)/g;
+  let out='',last=0;
+  for(const m of s.matchAll(re)){
+    out+=esc(s.slice(last,m.index));
+    let url=m[2]||m[3],tail='';
+    if(!m[2]){const trimmed=url.replace(/[.,!?;:]+$/,'');tail=url.slice(trimmed.length);url=trimmed}
+    const amazon=isAmazonURL(url),effective=amazon?editedAmazonURL(url):url;
+    const href=safeHref(effective),label=m[1]||(amazon?'Ver na Amazon':url);
+    out+=href?`<a href="${esc(href)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>${amazon&&isPossibleAffiliate(effective)?'<span class="affiliate-label"> (possível link de afiliado)</span>':''}${esc(tail)}`:esc(m[0]);
+    last=m.index+m[0].length;
+  }
+  return out+esc(s.slice(last))
+}
+function paragraphs(s){return String(s||'').trim().split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<p class="body-paragraph">${linkify(x).replace(/\n/g,'<br>')}</p>`).join('')}
+function dateLabel(){const s=$('start').value,e=$('end').value;if(!s||!e)return '';const d=v=>new Date(v+'T12:00:00');return fmt(d(s))+' a '+fmt(d(e))}
+function data(){return {title:$('title').value.trim()||'Newsletter Psicaótica',subtitle:$('subtitle').value.trim(),date:dateLabel(),intro:$('intro').value.trim(),psicaecos:$('psicaecos').value.trim(),activities:$('activities').value.trim(),closing:$('closing').value.trim(),authors:authors.filter(a=>a.include&&a.text.trim())}}
+function giroHTML(x){return `<section class="piece"><h3>Giro da Semana</h3>${x.authors.map(a=>`<h4>${memberCreditHTML(a)}</h4>${paragraphsWithCovers(editorialBody(a.text))}`).join('')}</section>`}
+function bodyHTML(x,onlyGiro=false){
+ if(onlyGiro)return giroHTML(x);
+ return `${x.intro?paragraphs(x.intro):''}${x.psicaecos?`<section class="piece"><h2>Coluna Psicaecos</h2><h4>diálogos com todos, todas e todes</h4>${paragraphs(x.psicaecos)}</section><hr class="rule">`:''}${giroHTML(x)}${x.activities?`<hr class="rule"><section class="piece"><h2>Atividades do Coletivo</h2>${paragraphs(x.activities)}</section>`:''}${x.closing?`<hr class="rule">${paragraphs(x.closing)}`:''}`;
+}
+function renderPreview(){
+ const x=data(),preview=$('preview');
+ preview.innerHTML=`<p class="submeta">Substack de Psicaótica · ${esc(x.date)}</p><h2 class="head-title">${esc(x.title)}</h2>${x.subtitle?`<p class="head-subtitle">${esc(x.subtitle)}</p>`:''}<hr class="rule">${bodyHTML(x)}`;
+ preview.querySelectorAll('figure.book-figure img[data-book-url]').forEach(img=>{
+   const missing=img.closest('figure').querySelector('.book-cover-error');wireCoverImage(img,missing);
+ });
+ if(!x.authors.length){const e=document.createElement('p');e.textContent='Nenhum texto selecionado. Importe ou selecione as contribuições para montar o Giro.';e.className='empty';preview.appendChild(e)}
+}
+function toMarkdown(x,onlyGiro=false){
+ const giro='### Giro da Semana\n\n'+x.authors.map(a=>'#### **'+memberCreditMarkdown(a)+'**\n\n'+markdownWithCovers(editorialBody(a.text))+'\n\n').join('');
+ if(onlyGiro)return giro;
+ return `# ${x.title}\n\n${x.subtitle?x.subtitle+'\n\n':''}${x.intro?amazonMarkdownBody(x.intro)+'\n\n':''}${x.psicaecos?'# Coluna Psicaecos\n\n#### diálogos com todos, todas e todes\n\n'+amazonMarkdownBody(x.psicaecos)+'\n\n---\n\n':''}${giro}${x.activities?'\n---\n\n# Atividades do Coletivo\n\n'+amazonMarkdownBody(x.activities)+'\n\n':''}${x.closing?'\n---\n\n'+amazonMarkdownBody(x.closing):''}`;
+}
+function toPlain(x){return `${x.title}\n${x.subtitle}\n${x.date}\n\n${x.intro?amazonPlainBody(x.intro)+'\n\n':''}${x.psicaecos?'COLUNA PSICAECOS\n\n'+amazonPlainBody(x.psicaecos)+'\n\n':''}GIRO DA SEMANA\n\n${x.authors.map(a=>memberCreditPlain(a)+'\n\n'+amazonPlainBody(editorialBody(a.text))).join('\n\n----------------\n\n')}${x.activities?'\n\nATIVIDADES DO COLETIVO\n\n'+amazonPlainBody(x.activities):''}${x.closing?'\n\n'+amazonPlainBody(x.closing):''}`}
+function download(name,text,mime){const b=new Blob([text],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},3000)}
+function safeName(){return `giro-psicaotica-${$('start').value||'edicao'}`}
+function exportHTML(){const x=data();return `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(x.title)}</title><style>body{font-family:Georgia,serif;max-width:760px;margin:30px auto;padding:0 20px;line-height:1.7;color:#292432}h1{font-size:32px}h2{margin:32px 0 8px;font-size:27px}h3{margin:26px 0 12px;font-size:22px}h4{margin:20px 0 8px;font-weight:700}.body-paragraph{margin:8px 0;overflow-wrap:anywhere}a{color:#604074}.subtitle{color:#665d66}
+/* v9: seleção e prévia visíveis também sem carregar a foto externa */
+.book-quick-preview{margin:13px 0 0;padding:15px;border:2px solid #c5b0cf;background:#f6f1fa;border-radius:12px}
+.book-quick-preview h4{margin:0 0 10px;font-family:system-ui,sans-serif;font-size:1rem}
+.book-quick-preview .book-preview-content{display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.book-quick-preview .book-preview-content>div:last-child{flex:1;min-width:175px}
+.book-quick-preview img{max-width:150px;max-height:220px;min-width:75px;object-fit:contain;display:block;background:white}
+.book-photo-fallback{display:none;min-height:105px;max-width:160px;background:#ebe7ed;border-radius:8px;border:1px dashed #ad9eb4;padding:12px;font-size:.79rem;color:#493d51;align-items:center}
+.book-photo-fallback.visible{display:flex}
+.book-preview-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.book-error{color:#8a3434;font-size:.8rem;margin:8px 0 0}
+.book-result img.book-broken{display:none}
+.book-result .book-image-warning{display:none;font-size:.77rem;color:#8a3434;margin:4px 0}
+.book-result .book-image-warning.visible{display:block}
+.preview .book-cover-error{padding:10px;color:#8a3434;font:normal .8rem system-ui,sans-serif}
+</style></head><body><h1>${esc(x.title)}</h1><p class="subtitle">${esc(x.subtitle)}</p>${bodyHTML(x)}</body></html>`}
+function decodeText(input){
+  const bytes=input instanceof Uint8Array?input:new Uint8Array(input);
+  if(bytes.length>=2){
+    if(bytes[0]===0xff&&bytes[1]===0xfe)return new TextDecoder('utf-16le').decode(bytes);
+    if(bytes[0]===0xfe&&bytes[1]===0xff)return new TextDecoder('utf-16be').decode(bytes);
+    if(bytes.length>10){let even=0,odd=0;for(let i=0;i<Math.min(bytes.length,400);i++){if(bytes[i]===0){if(i%2)odd++;else even++}}if(odd>30)return new TextDecoder('utf-16le').decode(bytes);if(even>30)return new TextDecoder('utf-16be').decode(bytes)}
+  }
+  return new TextDecoder('utf-8').decode(bytes);
+}
+async function zipToText(file){
+  const buffer=await file.arrayBuffer(),dv=new DataView(buffer),bytes=new Uint8Array(buffer);let eocd=-1;
+  for(let i=buffer.byteLength-22;i>=Math.max(0,buffer.byteLength-65557);i--)if(dv.getUint32(i,true)===0x06054b50){eocd=i;break}
+  if(eocd<0)throw Error('ZIP inválido. Descompacte e use o arquivo da conversa (.txt).');
+  const count=dv.getUint16(eocd+10,true),dirStart=dv.getUint32(eocd+16,true);
+  let off=dirStart;const decoder=new TextDecoder('utf-8');let choices=[];
+  for(let i=0;i<count;i++){
+    if(off+46>bytes.length||dv.getUint32(off,true)!==0x02014b50)break;
+    const method=dv.getUint16(off+10,true),compSize=dv.getUint32(off+20,true),len=dv.getUint16(off+28,true),extra=dv.getUint16(off+30,true),comment=dv.getUint16(off+32,true),local=dv.getUint32(off+42,true);
+    const name=decoder.decode(bytes.subarray(off+46,off+46+len));
+    if(/\.txt$/i.test(name)&&!name.startsWith('__MACOSX/')&&local<bytes.length)choices.push({name,method,compSize,local});
+    off+=46+len+extra+comment;
+  }
+  choices.sort((a,b)=>Number(/(?:^|\/)_chat\.txt$/i.test(b.name))-Number(/(?:^|\/)_chat\.txt$/i.test(a.name)));
+  if(!choices.length)throw Error('Não encontrei arquivo de conversa .txt dentro do ZIP. Exporte novamente a conversa do WhatsApp, usando "Sem mídia".');
+  let best=null;
+  for(const f of choices){
+    try{
+      const pos=f.local;
+      if(pos+30>bytes.length||dv.getUint32(pos,true)!==0x04034b50)continue;
+      const start=pos+30+dv.getUint16(pos+26,true)+dv.getUint16(pos+28,true);
+      if(start+f.compSize>bytes.length)continue;
+      const compressed=bytes.slice(start,start+f.compSize);let uncompressed;
+      if(f.method===0)uncompressed=compressed;
+      else if(f.method===8&&typeof DecompressionStream!=='undefined'){
+        const stream=new Blob([compressed]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+        uncompressed=new Uint8Array(await new Response(stream).arrayBuffer());
+      }else continue;
+      const text=decodeText(uncompressed),parsed=extractMessages(text);
+      const score=parsed.result.length*10000+parsed.dateHeaders*100+Number(/_chat\.txt$/i.test(f.name));
+      if(!best||score>best.score)best={text,name:f.name,score};
+      if(parsed.result.length>0)return best.text;
+    }catch(e){/* tenta o próximo arquivo de texto do ZIP */}
+  }
+  if(best)return best.text; // O diagnóstico mostrará o início do arquivo não reconhecido.
+  throw Error('Não foi possível extrair o texto do ZIP. Descompacte e escolha o arquivo da conversa (.txt).');
+}
+function showDiagnostics(text){
+  const el=$('diagnostics');el.classList.remove('hidden');
+  const lines=text.replace(/\r\n?/g,'\n').split('\n').filter(x=>x.trim()).slice(0,5);
+  $('diagnostic-lines').textContent=lines.map(x=>x.slice(0,250)).join('\n')||'(o arquivo parece vazio)';
+}
+function importChat(text){
+  // A associação entre links vale somente para o arquivo/edição atual.
+  amazonEdits={};linkedAffiliateSources={};affiliateIgnored.clear();hiddenStandaloneAffiliateLinks.clear();
+  const parsed=extractMessages(text);
+  messages=parsed.result.filter(m=>m.body.trim()&&!isMediaPlaceholder(m.body));
+  messages.sort((a,b)=>a.date-b.date);allCount=parsed.result.length;
+  if(!messages.length){
+    showDiagnostics(text);
+    if(parsed.dateHeaders>0)throw Error(`Encontrei ${parsed.dateHeaders} linha(s) com data e hora, mas não consegui identificar as mensagens de participantes. Abra o diagnóstico abaixo.`);
+    throw Error('O arquivo abriu, mas não reconheci o formato das mensagens. Abra "Verificar por que a importação falhou" abaixo.');
+  }
+  $('diagnostics').classList.add('hidden');
+  $('editor').classList.remove('hidden');setWeek();filterMessages();
+  const participants=new Set(messages.map(x=>x.author)).size;
+  $('stats').classList.remove('hidden');$('stats').replaceChildren();
+  for(const txt of [`${messages.length} mensagens de texto`,`${participants} autores`,`Período: ${fmt(messages[0].date)} – ${fmt(messages[messages.length-1].date)}`]){
+    const span=document.createElement('span');span.className='pill';span.textContent=txt;$('stats').appendChild(span);
+  }
+  showStatus(`Arquivo lido com sucesso. ${allCount-messages.length} mensagens vazias ou de mídia foram deixadas de fora.`);
+}
+$('file').addEventListener('change',async e=>{
+  const f=e.target.files?.[0];if(!f)return;
+  try{
+    const text=/\.zip$/i.test(f.name)?await zipToText(f):decodeText(await f.arrayBuffer());
+    importChat(text);
+  }catch(err){$('editor').classList.add('hidden');$('stats').classList.add('hidden');showStatus(err.message||'Não foi possível ler o arquivo.',true)}
+});
+$('parse-paste').addEventListener('click',()=>{
+  try{importChat($('paste-chat').value)}catch(err){$('editor').classList.add('hidden');$('stats').classList.add('hidden');showStatus(err.message||'Não foi possível ler o texto.',true)}
+});
+$('filter').addEventListener('click',filterMessages);
+$('week').addEventListener('click',()=>{if(messages.length){setWeek();filterMessages()}});
+for(const id of ['title','subtitle','intro','psicaecos','activities','closing'])$(id).addEventListener('input',renderPreview);
+$('md').addEventListener('click',()=>download(safeName()+'.md',toMarkdown(data()),'text/markdown;charset=utf-8'));
+$('html').addEventListener('click',()=>download(safeName()+'.html',exportHTML(),'text/html;charset=utf-8'));
+async function copyPlain(content,label){
+ try{await navigator.clipboard.writeText(content);showStatus(label+' copiado.',false,'copy-status');return}
+ catch{}
+ const t=document.createElement('textarea');t.value=content;t.style.position='fixed';t.style.left='-9999px';document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();showStatus(ok?label+' copiado.':'O navegador bloqueou a cópia. Use Baixar Markdown ou selecione o texto da prévia.',!ok,'copy-status');
+}
+async function copyRich(html,plain,label){
+ if(navigator.clipboard?.write&&typeof ClipboardItem!=='undefined'){
+   try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([plain],{type:'text/plain'})})]);showStatus(label+' copiado com formatação. Cole no Substack. Se alguma capa não aparecer, use a opção Abrir imagem para salvar e envie-a no editor.',false,'copy-status');return}catch(e){}
+ }
+ // Fallback para file:// e navegadores que bloqueiam ClipboardItem.
+ const area=document.createElement('div');area.innerHTML=html;area.style.position='fixed';area.style.left='-99999px';area.style.top='0';document.body.appendChild(area);
+ const sel=window.getSelection(),range=document.createRange();range.selectNodeContents(area);sel.removeAllRanges();sel.addRange(range);
+ const ok=document.execCommand('copy');sel.removeAllRanges();area.remove();
+ showStatus(ok?label+' copiado. Cole no Substack e verifique títulos e links.':'Não foi possível copiar automaticamente. Selecione o conteúdo da prévia manualmente.',!ok,'copy-status');
+}
+$('copy-giro').addEventListener('click',()=>copyRich(giroHTML(data()),toMarkdown(data(),true),'Giro da Semana'));
+$('copy-rich').addEventListener('click',()=>copyRich(bodyHTML(data()),toPlain(data()),'Corpo da newsletter'));
+$('copy-title').addEventListener('click',()=>copyPlain(data().title,'Título'));
+$('copy-subtitle').addEventListener('click',()=>copyPlain(data().subtitle,'Subtítulo'));
+$('copy').addEventListener('click',()=>copyPlain(toPlain(data()),'Texto simples'));
+</script>
+</body></html>
